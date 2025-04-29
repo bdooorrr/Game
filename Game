@@ -1,0 +1,60 @@
+<body>
+
+<h1>لعبة المتشابهات</h1>
+<div id="timer">الوقت: 60 ثانية</div>
+<div class="game-board" id="gameBoard"></div>
+<div id="winMessage">فزتِ!</div>
+<canvas id="confetti"></canvas>
+
+<!-- الأصوات -->
+<audio id="matchSound" src="https://www.soundjay.com/button/beep-07.mp3"></audio>
+<audio id="winSound" src="https://www.soundjay.com/human/applause-8.mp3"></audio>
+
+<script>
+    const matchSound = document.getElementById('matchSound');
+    const winSound = document.getElementById('winSound');
+
+    // ... باقي الكود ما تغيّر كثير ...
+
+    function checkWin() {
+        if (matchedCount === symbols.length) {
+            clearInterval(timerInterval);
+            document.getElementById('winMessage').style.display = 'block';
+            disableAllCards();
+            startConfetti();
+            winSound.play();
+        }
+    }
+
+    function flipCard(card) {
+        if (lock || card.classList.contains('matched') || card === firstCard) return;
+
+        card.innerText = card.dataset.symbol;
+
+        if (!firstCard) {
+            firstCard = card;
+        } else {
+            secondCard = card;
+            lock = true;
+
+            if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+                firstCard.classList.add('matched');
+                secondCard.classList.add('matched');
+                matchedCount += 2;
+                matchSound.play(); // تشغيل صوت التطابق
+                resetTurn();
+                checkWin();
+            } else {
+                setTimeout(() => {
+                    firstCard.innerText = '';
+                    secondCard.innerText = '';
+                    resetTurn();
+                }, 1000);
+            }
+        }
+    }
+
+    // rest of the code remains same...
+
+</script>
+</body>
